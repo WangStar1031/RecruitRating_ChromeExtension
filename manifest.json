@@ -1,0 +1,15 @@
+{
+	"name": "Change Potential Extension",
+	"version": "1.0",
+	"description": "Change values on Potential!",
+	"permissions": ["activeTab","declarativeContent","storage"],
+	"content_scripts": [
+		{
+			"matches": ["https://www.whatifsports.com/hd/RecruitProfile/*"],
+			"js":["js/jquery.min.js", "mornitoring.js"]
+		}
+	],
+	"icons": {
+	},
+	"manifest_version": 2
+}

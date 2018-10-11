@@ -1,0 +1,188 @@
+
+function makeButtons(){
+	var navMenu = $('#RecruitProfileNav .ProfileNav');
+	if( navMenu.length == 0){
+		return false;
+	}
+	// return true;
+	var strScript = '';
+
+	strScript += 'function setCookie(cname, cvalue, exdays) {';
+		strScript += 'var d = new Date();';
+		strScript += 'd.setTime(d.getTime() + (exdays*24*60*60*1000));';
+		strScript += 'var expires = "expires="+ d.toUTCString();';
+		strScript += 'document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";';
+	strScript += '}';
+	strScript += 'function getCookie(cname) {';
+		strScript += 'var name = cname + "=";';
+		strScript += 'var decodedCookie = decodeURIComponent(document.cookie);';
+		strScript += 'var ca = decodedCookie.split(";");';
+		strScript += 'for(var i = 0; i <ca.length; i++) {';
+			strScript += 'var c = ca[i];';
+			strScript += 'while (c.charAt(0) == " ") {';
+				strScript += 'c = c.substring(1);';
+			strScript += '}';
+			strScript += 'if (c.indexOf(name) == 0) {';
+				strScript += 'return c.substring(name.length, c.length);';
+			strScript += '}';
+		strScript += '}';
+		strScript += 'return "";';
+	strScript += '}';
+	strScript += 'var g_nPotentialVeryLow = 0;';
+	strScript += 'var g_nPotentialLow = 4;';
+	strScript += 'var g_nPotentialModerate = 10;';
+	strScript += 'var g_nPotentialHigh = 20;';
+	strScript += 'var g_nPotentialVeryHigh = 30;';
+
+	strScript += 'if(getCookie("g_nPotentialVeryLow") == ""){';
+		strScript += 'setCookie("g_nPotentialVeryLow", g_nPotentialVeryLow, 365);';
+	strScript += '} else{';
+		strScript += 'g_nPotentialVeryLow = getCookie("g_nPotentialVeryLow")*1;';
+	strScript += '}';
+	strScript += 'if(getCookie("g_nPotentialLow") == ""){';
+		strScript += 'setCookie("g_nPotentialLow", g_nPotentialLow, 365);';
+	strScript += '} else{';
+		strScript += 'g_nPotentialLow = getCookie("g_nPotentialLow")*1;';
+	strScript += '}';
+	strScript += 'if(getCookie("g_nPotentialModerate") == ""){';
+		strScript += 'setCookie("g_nPotentialModerate", g_nPotentialModerate, 365);';
+	strScript += '} else{';
+		strScript += 'g_nPotentialModerate = getCookie("g_nPotentialModerate")*1;';
+	strScript += '}';
+	strScript += 'if(getCookie("g_nPotentialHigh") == ""){';
+		strScript += 'setCookie("g_nPotentialHigh", g_nPotentialHigh, 365);';
+	strScript += '} else{';
+		strScript += 'g_nPotentialHigh = getCookie("g_nPotentialHigh")*1;';
+	strScript += '}';
+	strScript += 'if(getCookie("g_nPotentialVeryHigh") == ""){';
+		strScript += 'setCookie("g_nPotentialVeryHigh", g_nPotentialVeryHigh, 365);';
+	strScript += '} else{';
+		strScript += 'g_nPotentialVeryHigh = getCookie("g_nPotentialVeryHigh")*1;';
+	strScript += '}';
+
+	strScript += "function setRate(){";
+		strScript += "var tables = $('.ratingsTable .recruitRatings');";
+		strScript += "if(tables.length == 0)return false;";
+		strScript += "if(tables.eq(0).is(':hidden'))return false;";
+		strScript += "var trs = tables.eq(0).find('tr');";
+		strScript += "var totalRates = 0;"
+		strScript += "for( var i = 0; i < trs.length; i++){";
+			strScript += "var curTr = trs.eq(i);";
+			strScript += "var rating = curTr.find('.rating span').eq(0);";
+			strScript += "if(curTr.find('.name').eq(0).text().toLowerCase() == 'work ethic'){";
+				strScript += "totalRates += parseInt(rating.text());";
+				strScript += "continue;";
+			strScript += "}";
+			strScript += "var className = rating.attr('class').split(' ')[0];";
+			strScript += "var rates = rating.text();";
+			strScript += "if( parseInt(rates)){";
+				strScript += "var nRate = rates * 1;";
+				strScript += "switch(className){";
+					strScript += "case 'potential_verylow':";
+					strScript += "nRate += g_nPotentialVeryLow;";
+					strScript += "break;";
+					strScript += "case 'potential_low':";
+					strScript += "nRate += g_nPotentialLow;";
+					strScript += "break;";
+					strScript += "case 'potential_average':";
+					strScript += "nRate += g_nPotentialModerate;";
+					strScript += "break;";
+					strScript += "case 'potential_high':";
+					strScript += "nRate += g_nPotentialHigh;";
+					strScript += "break;";
+					strScript += "case 'potential_veryhigh':";
+					strScript += "nRate += g_nPotentialVeryHigh;";
+					strScript += "break;";
+				strScript += "}";
+				strScript += "nRate = (nRate >= 100 ? 100 : nRate);";
+				strScript += "rating.html(nRate);";
+				strScript += "curTr.find('.ratingbar_section span').eq(0).css('width', 'calc('+nRate+'% - 2px)');";
+				strScript += "rating.attr('class', 'potential_verylow');";
+				strScript += "totalRates += nRate;";
+			strScript += "}";
+		strScript += "}";
+		strScript += "$('.recruitRating').text(totalRates);";
+	strScript += "}";
+
+	strScript += "function CloseSettings(){";
+		strScript += "$('.RecruitRatingsContainer').show();";
+		strScript += "$('.settingsPage').hide();";
+	strScript += "}";
+
+	strScript += "function SavePotential(){";
+		strScript += "g_nPotentialVeryLow = $('input[name=" + '"VeryLow"]' + "').val();";
+		strScript += "g_nPotentialLow = $('input[name=" + '"Low"]' + "').val();";
+		strScript += "g_nPotentialModerate = $('input[name=" + '"Moderate"]' + "').val();";
+		strScript += "g_nPotentialHigh = $('input[name=" + '"High"]' + "').val();";
+		strScript += "g_nPotentialVeryHigh = $('input[name=" + '"VeryHigh"]' + "').val();";
+		strScript += "setCookie('g_nPotentialVeryLow',g_nPotentialVeryLow,365);";
+		strScript += "setCookie('g_nPotentialLow',g_nPotentialLow,365);";
+		strScript += "setCookie('g_nPotentialModerate',g_nPotentialModerate,365);";
+		strScript += "setCookie('g_nPotentialHigh',g_nPotentialHigh,365);";
+		strScript += "setCookie('g_nPotentialVeryHigh',g_nPotentialVeryHigh,365);";
+		strScript += "CloseSettings();";
+	strScript += "}";
+
+	strScript += "function setSettings(){";
+		strScript += "if($('.settingsPage').length == 0){";
+			strScript += "strHtml = '';";
+			strScript += "strHtml += '<div class=" + '"settingsPage"' + " style=" + '"background-color:#eeeff1;padding:10px;"' + ">';";
+				strScript += "strHtml += '<div onclick=" + '"CloseSettings()"' + " style=" + '"font-size:1.5em;font-weight:bold;float:right;cursor:pointer;"' + ">X</div>';";
+				strScript += "strHtml += '<table style=" + '"margin:auto; font-size:1.5em; font-weight:bold;"' + ">';";
+					strScript += "strHtml += '<tr>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + ">Value to add for Petential Very Low:</td>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + "><input type=" + '"text"' + " name=" + '"VeryLow"' + "></td>';";
+					strScript += "strHtml += '</tr>';";
+					strScript += "strHtml += '<tr>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + ">Value to add for Petential Low:</td>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + "><input type=" + '"text"' + " name=" + '"Low"' + "></td>';";
+					strScript += "strHtml += '</tr>';";
+					strScript += "strHtml += '<tr>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + ">Value to add for Petential Moderate:</td>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + "><input type=" + '"text"' + " name=" + '"Moderate"' + "></td>';";
+					strScript += "strHtml += '</tr>';";
+					strScript += "strHtml += '<tr>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + ">Value to add for Petential High:</td>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + "><input type=" + '"text"' + " name=" + '"High"' + "></td>';";
+					strScript += "strHtml += '</tr>';";
+					strScript += "strHtml += '<tr>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + ">Value to add for Petential Very High:</td>';";
+						strScript += "strHtml += '<td style=" + '"padding:10px;"' + "><input type=" + '"text"' + " name=" + '"VeryHigh"' + "></td>';";
+					strScript += "strHtml += '</tr>';";
+				strScript += "strHtml += '</table>';";
+				strScript += "strHtml += '<div onclick=" + '"SavePotential()"' + " style=" + '"margin: auto; width: 3em; font-size: 1.4em; font-weight: bold; cursor: pointer; border: 1px solid; text-align: center; color: gray;padding:5px 10px 5px 10px;"' + ">Save</div>';";
+			strScript += "strHtml += '</div>';";
+			strScript += "$('.RecruitProfile_TabBox').append(strHtml);";
+		strScript += "} else{";
+			strScript += "$('.settingsPage').show();";
+		strScript += "}";
+		strScript += "$('input[name=" + '"VeryLow"]' + "').val(g_nPotentialVeryLow);";
+		strScript += "$('input[name=" + '"Low"]' + "').val(g_nPotentialLow);";
+		strScript += "$('input[name=" + '"Moderate"]' + "').val(g_nPotentialModerate);";
+		strScript += "$('input[name=" + '"High"]' + "').val(g_nPotentialHigh);";
+		strScript += "$('input[name=" + '"VeryHigh"]' + "').val(g_nPotentialVeryHigh);";
+		strScript += "$('.RecruitRatingsContainer').hide();";
+	strScript += "}";
+	
+	var s = document.createElement("script");
+	s.type = "text/javascript";
+	s.text = strScript;
+	document.body.appendChild( s );
+
+	var strHtml = '<ul class="level1 static" role="menu" style="position: absolute; right: 0px;">';
+		strHtml += '<li role="menuitem" class="static" style="position: relative;">';
+			strHtml += '<a class="level1 static" href="#" onclick="setRate()';
+			strHtml += '">Toggle</a>';
+		strHtml += '</li>';
+		strHtml += '<li role="menuitem" class="static" style="position: relative;">';
+			strHtml += '<a class="level1 static" href="#" onclick="setSettings()">Settings</a>';
+		strHtml += '</li>';
+	strHtml += '</ul>';
+	navMenu.eq(0).append(strHtml);
+	return true;
+}
+var interval = setInterval(function(){
+	if(makeButtons() == true){
+		clearInterval(interval);
+	}
+});
